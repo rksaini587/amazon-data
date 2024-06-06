@@ -9,6 +9,7 @@ show_button = st.button('Show data')
 
 # Load the data from CSV
 df = pd.read_csv('amazon business.csv')
+df['year'] = pd.to_datetime(df['Order Date']).dt.year
 
 # Display data if button is clicked
 if show_button:
@@ -40,3 +41,23 @@ if calculate:
         st.bar_chart(var['highest_profit'])
     else:
         st.write("Please enter a valid category and number.")
+
+# Header for yearly profit section
+st.header('Yearly profit')
+
+# Function to calculate yearly profit
+def yearly(year):
+    df = pd.read_csv('amazon business.csv')
+    df['year'] = pd.to_datetime(df['Order Date']).dt.year
+    return df.loc[df['year'] == year]['Profit'].sum()
+
+# Input for year
+year = int(st.number_input('Enter Year', min_value=2000, step=1))
+
+# Button to calculate yearly profit
+calculate_yearly = st.button('Calculate yearly profit')
+
+# Calculate and display the yearly profit if button is clicked
+if calculate_yearly:
+    profit = yearly(year)
+    st.write(f"The total profit for the year {year} is {profit}")
